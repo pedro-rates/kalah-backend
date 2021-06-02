@@ -1,10 +1,12 @@
-package KalahDao;
+package kalahDao;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -18,9 +20,11 @@ import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 
-import KalahBackend.Board;
+import kalahModel.Board;
 
 public class BoardDaoImpl implements BoardDao {
+	
+	private static final Logger logger = LoggerFactory.getLogger(BoardDaoImpl.class);
 	
 	AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
 			.withRegion(Regions.US_EAST_1)
@@ -31,13 +35,13 @@ public class BoardDaoImpl implements BoardDao {
 	    Board board = new Board();
 	    board.setBoardId(gameId);
 	    try {
-	    	System.out.println("Retrieving board with id " + board.getBoardId());
+	    	logger.debug("Retrieving board with id " + board.getBoardId());
 	    	DynamoDBQueryExpression<Board> queryExpression = new DynamoDBQueryExpression<Board>()
 	    			.withHashKeyValues(board);
 	 	    
 	 	    List<Board> boardList = mapper.query(Board.class, queryExpression);
 	 	    if(boardList.isEmpty()) {
-	 	    	System.out.println("Board not found");
+	 	    	logger.debug("Board not found");
 	 	    	return null;
 	 	    }
 	 	    Board returnBoard = boardList.get(0);
@@ -47,8 +51,8 @@ public class BoardDaoImpl implements BoardDao {
 	 	    return returnBoard;
 	    }
 	    catch (Exception e) {
-	        System.err.println("Unable to read item: " + gameId);
-	        System.err.println(e.getMessage());
+	    	logger.error("Unable to read item: " + gameId);
+	    	logger.error(e.getMessage());
 	    }
 		return null;
 	}
@@ -60,8 +64,8 @@ public class BoardDaoImpl implements BoardDao {
 	    	mapper.save(board);
 	    }
         catch (Exception e) {
-            System.err.println("Unable to add item: " + board.getBoardId());
-            System.err.println(e.getMessage());
+        	logger.error("Unable to add item: " + board.getBoardId());
+        	logger.error(e.getMessage());
         }
 	}
 	
@@ -74,13 +78,13 @@ public class BoardDaoImpl implements BoardDao {
 	            .withValueMap(new ValueMap().withString(":t", board.getCurrentTurn()).withList(":a", pitsList))
 	            .withReturnValues(ReturnValue.UPDATED_NEW);
 	        try {
-	            System.out.println("Updating the item...");
+	            logger.debug("Updating the item...");
 	            UpdateItemOutcome outcome = table.updateItem(updateItemSpec);
-	            System.out.println("UpdateItem succeeded:\n" + outcome.getItem().toJSONPretty());
+	            logger.debug("UpdateItem succeeded:\n" + outcome.getItem().toJSONPretty());
 	        }
 	        catch (Exception e) {
-	            System.err.println("Unable to update item: " + board.getBoardId());
-	            System.err.println(e.getMessage());
+	            logger.error("Unable to update item: " + board.getBoardId());
+	            logger.error(e.getMessage());
 	        }
 	}
 }

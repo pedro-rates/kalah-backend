@@ -1,12 +1,17 @@
-package KalahService;
+package kalahService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 
-import KalahApp.GameDTO;
-import KalahBackend.Board;
-import KalahDao.BoardDaoImpl;
+import kalahDao.BoardDaoImpl;
+import kalahModel.Board;
+import kalahModel.GameDTO;
 
 public class BoardService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(BoardService.class);
 	
 	@Inject
 	BoardDaoImpl boardDao;
@@ -20,9 +25,9 @@ public class BoardService {
 		if(board == null) {
 			return null;
 		}
-		System.out.println("gameId: " + board.getBoardId());
+		logger.debug("gameId: " + board.getBoardId());
 		int chosenPit = gameDTO.getChosenPit();
-		System.out.println("chosen pit: " + chosenPit);
+		logger.debug("chosen pit: " + chosenPit);
 		boolean validMove = board.isMoveValid(chosenPit);
 		if(!validMove) {
 			board.setGameStatus(Board.GAME_STATUS_INVALID);

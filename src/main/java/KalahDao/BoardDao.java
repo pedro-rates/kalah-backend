@@ -1,6 +1,6 @@
-package KalahDao;
+package kalahDao;
 
-import KalahBackend.Board;
+import kalahModel.Board;
 
 public interface BoardDao {
 	

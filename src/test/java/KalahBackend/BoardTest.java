@@ -1,8 +1,10 @@
-package KalahBackend;
+package kalahBackend;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import kalahModel.Board;
 
 public class BoardTest {
 	

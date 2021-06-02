@@ -1,4 +1,4 @@
-package KalahApp;
+package kalahModel;
 
 public class GameDTO {
 	

@@ -1,9 +1,9 @@
-package KalahApp;
+package kalahApp;
 
 import com.google.inject.AbstractModule;
 
-import KalahDao.BoardDao;
-import KalahDao.BoardDaoImpl;
+import kalahDao.BoardDao;
+import kalahDao.BoardDaoImpl;
 
 public class BasicModule extends AbstractModule {
 	

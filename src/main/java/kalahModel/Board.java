@@ -1,8 +1,10 @@
-package KalahBackend;
+package kalahModel;
 
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
@@ -11,6 +13,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName="kallah_game")
 public class Board {
+	
+	private static final Logger logger = LoggerFactory.getLogger(Board.class);
 	
 	private final static int DEFAULT_GAME_SIZE = 6;
 	private final static int DEFAULT_SEEDS_NUMBER = 4;
@@ -124,16 +128,16 @@ public class Board {
 	}
 	
 	public void performCapture(int lastSeededHouse) {
-		System.out.println("performing capture");
+		logger.debug("Performing capture");
 		int oppositeHouseIndex = largePit2Index - lastSeededHouse - 1;
 		if(this.currentTurn.equals(PLAYER1)) {
 			int seedsWon = pits[lastSeededHouse];
 			pits[lastSeededHouse] = 0;
 			seedsWon += pits[oppositeHouseIndex];
-			System.out.println("seeds won = " + seedsWon);
+			logger.debug("seeds won = " + seedsWon);
 			pits[oppositeHouseIndex] = 0;
-			System.out.println("opposite pit index:" + oppositeHouseIndex);
-			System.out.println("last seeded house:" + lastSeededHouse);
+			logger.debug("opposite pit index:" + oppositeHouseIndex);
+			logger.debug("last seeded house:" + lastSeededHouse);
 			pits[largePit1Index]+= seedsWon;
 		} else {
 			int seedsWon = pits[lastSeededHouse];
@@ -141,9 +145,9 @@ public class Board {
 			seedsWon += pits[oppositeHouseIndex];
 			pits[oppositeHouseIndex] = 0;
 			pits[largePit2Index]+= seedsWon;
-			System.out.println("seeds won = " + seedsWon);
-			System.out.println("opposite pit index:" + oppositeHouseIndex);
-			System.out.println("last seeded house:" + lastSeededHouse);
+			logger.debug("seeds won = " + seedsWon);
+			logger.debug("opposite pit index:" + oppositeHouseIndex);
+			logger.debug("last seeded house:" + lastSeededHouse);
 		}
 	}
 	
@@ -175,7 +179,7 @@ public class Board {
 	}
 	
 	public boolean isMoveValid(int chosenPit) {
-		System.out.println("current turn: " + this.currentTurn);
+		logger.debug("current turn: " + this.currentTurn);
 		if(pits[chosenPit] == 0) {
 			return false;
 		}
