@@ -12,5 +12,5 @@ directory. It's possible to upload the file to AWS Lambda using the AWS CLI or t
 
 Run `gradle build` or `gradle test` to run the unit tests on the Board class.
 
-
-
+## Architecture
+![Architecture Diagram](Kalah.png)
